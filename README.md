@@ -4,32 +4,39 @@ Twitter does not save your tweets forever. TweetGatherer emails you your own
 tweets, retweets, and @reply-conversations for the past day. You can keep these
 emails as an archive, automatically send them to your blog as posts, etc.
 
-Tested in Ruby 1.8.
 
 # Usage
 
-> $ tweet\_gatherer --help
-> 
-> Usage: tweet\_gatherer [options]
->     -d, --date DATE                  Date (defaults to today)
->     -n, --num NUM                    Number of tweets to get per call
->     -t, --to EMAIL                   Email specified address; ignore config file
->     -f, --[no-]dry-run               Print email to STDOUT instead of sending it
->     -h, --help                       Show this help message
-> 
-> Settings are read from tweet\_gatherer.yml
+Tested in Ruby 1.8.
 
-For example:
+    $ tweet\_gatherer --help
+    
+    Usage: tweet\_gatherer [options]
+        -d, --date DATE                  Date (defaults to today)
+        -n, --num NUM                    Number of tweets to get per call
+        -t, --to EMAIL                   Email specified address; ignore config file
+        -f, --[no-]dry-run               Print email to STDOUT instead of sending it
+        -h, --help                       Show this help message
+    
+    Settings are read from tweet\_gatherer.yml
+
+For example, email yourself today's tweets:
 
     tweet_gatherer --to youremail@example.com
 
+Or email yourself some other day's tweets:
+
     tweet_gatherer --to youremail@example.com --date 2011-12-31
+
 
 # Installation
 
 ## Prerequisites
 
 `gem install -v 1.1.2 twitter`
+
+_(Yes, I know this is quite an old version of the API. It's what was out when I
+first wrote this program for myself, and it still works.)_
 
 ## Create a Twitter Application
 
@@ -68,20 +75,20 @@ with your own settings.
 Get the values from your Twitter application in the step above and include them
 in the _twitter_ section of the configuration file:
 
-> twitter:
->   consumer\_key: "**[consumer\_key]**"
->   consumer\_secret: "**[consumer\_secret]**"
->   oauth\_token: "**[oauth\_token]**"
->   oauth\_token\_secret: "**[oauth\_token\_secret]**"
+    twitter:
+      consumer\_key: "**[consumer\_key]**"
+      consumer\_secret: "**[consumer\_secret]**"
+      oauth\_token: "**[oauth\_token]**"
+      oauth\_token\_secret: "**[oauth\_token\_secret]**"
 
 These 4 values are _required_.
 
 There is also one optional setting:
 
->   ignore\_hashtags:
->     - ignore
->     - private
->     - whateveryouwant
+      ignore\_hashtags:
+        - ignore
+        - private
+        - whateveryouwant
 
 Any tweets that contain one of these hashtags will be ignored by TweetGatherer.
 
@@ -91,14 +98,14 @@ The _email_ section of the configuration file is optional. If you do not include
 a _to_ setting, you must pass a `--to you@example.com` argument to the program.
 The _from_ setting is also optional, and defaults to what you see below:
 
-> emails:
->   to: "Your Email <you@example.com>"
->   from: "TweetGatherer <tweet\_gatherer@arthaey.com>"
+    emails:
+      to: "Your Email <you@example.com>"
+      from: "TweetGatherer <tweet\_gatherer@arthaey.com>"
 
 ### Playing Nicely With Git
 
 If you used Git to clone TweetGatherer, you'll notice that it now marks
-tweet\_gatherer.yml as modified. However, you **should not commit changes to
+tweet\_gatherer.yml as modified. However, **you should not commit changes to
 tweet\_gatherer.yml**. To tell git to ignore your changes, run this:
 
     git update-index --assume-unchanged tweet_gatherer.yml
@@ -114,15 +121,14 @@ include something like the following in your crontab file:
 By default, TweetGatherer uses the current date as the day to gather tweets.
 Therefore, you should run the program just before midnight.
 
+
 # Troubleshooting
 
 ## Invalid / expired Token
 
-If you see this error message:
-
-> GET https://api.twitter.com/1/account/verify\_credentials.json: 401: Invalid / expired Token
-
-This means that your authorization settings in the tweet\_gatherer.yml settings
+If you see
+`GET https://api.twitter.com/1/account/verify\_credentials.json: 401: Invalid / expired Token`,
+it means that your authorization settings in the tweet\_gatherer.yml settings
 file are either missing or incorrect. Double-check them.
 
 ## 502 errors
@@ -130,6 +136,13 @@ file are either missing or incorrect. Double-check them.
 This seems to happen once you have more than ~2500 tweets total. Try passing an
 argument of `--num 100` or `--num 50` if you start seeing this error. See the
 [Twitter dev forum][2] for more details.
+
+
+# TODO
+
+ - use current version of Twitter gem
+ - look for complete @reply-conversations; some replies are missed
+ - support non-HTML email formatting
 
 
 [1]: https://dev.twitter.com/apps/new
