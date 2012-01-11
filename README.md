@@ -9,16 +9,16 @@ emails as an archive, automatically send them to your blog as posts, etc.
 
 Tested in Ruby 1.8.
 
-    $ tweet\_gatherer --help
+    $ tweet_gatherer --help
     
-    Usage: tweet\_gatherer [options]
+    Usage: tweet_gatherer [options]
         -d, --date DATE                  Date (defaults to today)
         -n, --num NUM                    Number of tweets to get per call
         -t, --to EMAIL                   Email specified address; ignore config file
         -f, --[no-]dry-run               Print email to STDOUT instead of sending it
         -h, --help                       Show this help message
     
-    Settings are read from tweet\_gatherer.yml
+    Settings are read from tweet_gatherer.yml
 
 For example, email yourself today's tweets:
 
@@ -76,16 +76,16 @@ Get the values from your Twitter application in the step above and include them
 in the _twitter_ section of the configuration file:
 
     twitter:
-      consumer\_key: "**[consumer\_key]**"
-      consumer\_secret: "**[consumer\_secret]**"
-      oauth\_token: "**[oauth\_token]**"
-      oauth\_token\_secret: "**[oauth\_token\_secret]**"
+      consumer_key: "[consumer_key]"
+      consumer_secret: "[consumer_secret]"
+      oauth_token: "[oauth_token]"
+      oauth_token_secret: "[oauth_token_secret]"
 
 These 4 values are _required_.
 
-There is also one optional setting:
+There is also one optional setting under the _twitter_ section:
 
-      ignore\_hashtags:
+      ignore_hashtags:
         - ignore
         - private
         - whateveryouwant
@@ -100,7 +100,7 @@ The _from_ setting is also optional, and defaults to what you see below:
 
     emails:
       to: "Your Email <you@example.com>"
-      from: "TweetGatherer <tweet\_gatherer@arthaey.com>"
+      from: "TweetGatherer <tweet_gatherer@arthaey.com>"
 
 ### Playing Nicely With Git
 
