@@ -1,0 +1,24 @@
+emails:
+  to:   "Your Email <you@example.com>"
+  from: "TweetGatherer <tweet_gatherer@arthaey.com>"
+
+
+twitter:
+  #
+  # Create yourself a Twitter application at https://dev.twitter.com/apps/new
+  # and copy the details from its "OAuth Settings" and "access token" sections
+  # to this file.
+  #
+  # KEEP THIS FILE SECRET! These random strings are like your password; if
+  # someone else gets these keys, tokens, and secrets, they can log in as you,
+  # post as you, etc.
+  #
+  consumer_key:       "abcdefghijklmnopqrstu"
+  consumer_secret:    "abcdefghijklmnopqrstuvwyxzabcdefghijklmno"
+  oauth_token:        "abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvwx"
+  oauth_token_secret: "abcdefghijklmnopqrstuvwyxzabcdefghijklmnopq"
+
+  # Any tweets containing the following hashtags will be ignored.
+  ignore_hashtags:
+    - ignore
+    - private

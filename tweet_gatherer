@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "optparse"
+
+require "lib/tweet_gatherer.rb"
+require "lib/emailer.rb"
+
+def parse_config
+  filename = File.basename(__FILE__, ".rb")
+  this_dir = File.expand_path(File.dirname(__FILE__))
+  YAML.load_file(File.join(this_dir, "#{filename}.yml"))
+end
+
+def parse_options
+  opts = {}
+  OptionParser.new do |args|
+    args.on("-d", "--date DATE", "Date (defaults to today)") do |arg|
+      opts[:date] = arg
+    end
+    args.on("-n", "--num NUM", "Number of tweets to get per call") do |arg|
+      opts[:num_tweets] = arg
+    end
+    args.on("-t", "--to EMAIL", "Email specified address; ignore config file") do |arg|
+      opts[:to_email] = arg
+    end
+    args.on("-f", "--[no-]dry-run", "Print email to STDOUT instead of sending it") do |arg|
+      opts[:dry_run] = arg
+    end
+    args.on_tail("-h", "--help", "Show this help message") do
+      puts args
+      puts "\nSettings are read from #{$0}.yml"
+      exit
+    end
+  end.parse!
+  opts
+end
+
+
+## MAIN PROGRAM ################################################################
+
+if __FILE__ == $0
+  opts = parse_options
+  config = parse_config
+
+  tg = TweetGatherer.new(config["twitter"], opts[:date], opts[:num_tweets])
+  exit if tg.tweets.empty? && tg.replies.empty? && tg.retweets.empty?
+
+  tweets = {
+    :tweets   => tg.tweets,
+    :replies  => tg.replies,
+    :retweets => tg.retweets,
+  }
+
+  # override configuration values as necessary
+  config["emails"] ||= {}
+  config["emails"]["to"] = opts[:to_email] unless opts[:to_email].nil?
+
+  emailer = Emailer.new(config["emails"], tweets, Twitter.user.screen_name)
+
+  if opts[:dry_run]
+    puts emailer.text
+  else
+    emailer.send
+  end
+end
