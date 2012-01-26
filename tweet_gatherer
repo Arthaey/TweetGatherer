@@ -3,6 +3,10 @@
 require "rubygems"
 require "optparse"
 
+# make sure this directory is in the load path, eg to work with cron
+require "pathname"
+$LOAD_PATH << File.dirname(Pathname.new(File.expand_path(__FILE__)).realpath.to_s).to_s
+
 require "lib/tweet_gatherer.rb"
 require "lib/emailer.rb"
 
