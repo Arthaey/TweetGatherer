@@ -127,7 +127,7 @@ Therefore, you should run the program just before midnight.
 ## Invalid / expired Token
 
 If you see
-`GET https://api.twitter.com/1/account/verify\_credentials.json: 401: Invalid / expired Token`,
+`GET https://api.twitter.com/1/account/verify_credentials.json: 401: Invalid / expired Token`,
 it means that your authorization settings in the tweet\_gatherer.yml settings
 file are either missing or incorrect. Double-check them.
 
