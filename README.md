@@ -140,9 +140,11 @@ argument of `--num 100` or `--num 50` if you start seeing this error. See the
 
 # TODO
 
- - use current version of Twitter gem
- - look for complete @reply-conversations; some replies are missed
+ - include @mentions that you didn't reply to
+ - include direct messages
+ - document all possible config settings
  - support non-HTML email formatting
+ - use current version of Twitter gem
 
 
 [1]: https://dev.twitter.com/apps/new

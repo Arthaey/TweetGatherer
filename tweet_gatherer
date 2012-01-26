@@ -10,10 +10,17 @@ $LOAD_PATH << File.dirname(Pathname.new(File.expand_path(__FILE__)).realpath.to_
 require "lib/tweet_gatherer.rb"
 require "lib/emailer.rb"
 
-def parse_config
+def parse_config(yml_override = nil)
   filename = File.basename(__FILE__, ".rb")
   this_dir = File.expand_path(File.dirname(__FILE__))
-  YAML.load_file(File.join(this_dir, "#{filename}.yml"))
+  yml_default = "#{filename}.mine.yml"
+  yml_filename = yml_override || yml_default
+
+  begin
+    YAML.load_file(File.join(this_dir, yml_filename))
+  rescue Errno::ENOENT
+    abort("ERROR: Configuration file '#{yml_filename}' does not exist.")
+  end
 end
 
 def parse_options
@@ -31,6 +38,9 @@ def parse_options
     args.on("-f", "--[no-]dry-run", "Print email to STDOUT instead of sending it") do |arg|
       opts[:dry_run] = arg
     end
+    args.on("-y", "--yml [FILENAME", "Yaml configuration file") do |arg|
+      opts[:yml] = arg
+    end
     args.on_tail("-h", "--help", "Show this help message") do
       puts args
       puts "\nSettings are read from #{$0}.yml"
@@ -45,7 +55,7 @@ end
 
 if __FILE__ == $0
   opts = parse_options
-  config = parse_config
+  config = parse_config(opts[:yml])
 
   tg = TweetGatherer.new(config["twitter"], opts[:date], opts[:num_tweets])
   exit if tg.tweets.empty? && tg.replies.empty? && tg.retweets.empty?
