@@ -59,6 +59,10 @@ class TweetGatherer
     @replies
   end
 
+  def date
+    @date.strftime("%F")
+  end
+
   private ######################################################################
 
   def configure_client

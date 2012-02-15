@@ -13,7 +13,7 @@ class Emailer
     :retweets => "What I found interesting or amusing",
   }
 
-  def initialize(config, tweets, screen_name)
+  def initialize(config, tweets, screen_name, subject = "Today's Tweets")
     # set any missing config values to their defaults
     config["from"] ||= FROM_DEFAULT
     section_titles = config["section_titles"] || {}
@@ -27,6 +27,7 @@ class Emailer
 
     @from_email = config["from"]
     @to_email = config["to"]
+    @subject = subject
     @screen_name = screen_name
 
     @tweets_list   = make_list(tweets[:tweets],   section_titles["tweets"])
@@ -41,7 +42,7 @@ class Emailer
       MIME-Version: 1.0
       Content-Transfer-Encoding: quoted-printable
       Content-type: text/html; charset=utf-8
-      Subject: Today's Tweets
+      Subject: #{@subject}
 
       #{@tweets_list}
 

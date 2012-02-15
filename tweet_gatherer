@@ -71,7 +71,9 @@ if __FILE__ == $0
   config["emails"] ||= {}
   config["emails"]["to"] = opts[:to_email] unless opts[:to_email].nil?
 
-  emailer = Emailer.new(config["emails"], tweets, Twitter.user.screen_name)
+  screen_name = Twitter.user.screen_name
+  subject = "Tweets from @#{screen_name} on #{tg.date}"
+  emailer = Emailer.new(config["emails"], tweets, screen_name, subject)
 
   if opts[:dry_run]
     puts emailer.text
