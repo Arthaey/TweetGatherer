@@ -2,6 +2,7 @@
 
 require "rubygems"
 require "optparse"
+require "yaml"
 
 # make sure this directory is in the load path, eg to work with cron
 require "pathname"
