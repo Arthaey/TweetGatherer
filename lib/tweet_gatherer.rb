@@ -44,15 +44,6 @@ class TweetGatherer
     configure_client
   end
 
-  def configure_client
-    Twitter.configure do |config|
-      config.consumer_key       = @consumer_key
-      config.consumer_secret    = @consumer_secret
-      config.oauth_token        = @oauth_token
-      config.oauth_token_secret = @oauth_token_secret
-    end
-  end
-
   def tweets
     fetch_all_tweets! unless @tweets
     @tweets
@@ -68,7 +59,17 @@ class TweetGatherer
     @replies
   end
 
-  private
+  private ######################################################################
+
+  def configure_client
+    Twitter.configure do |config|
+      config.consumer_key       = @consumer_key
+      config.consumer_secret    = @consumer_secret
+      config.oauth_token        = @oauth_token
+      config.oauth_token_secret = @oauth_token_secret
+    end
+  end
+
   def fetch_all_tweets!
     timeline_options = {
       :trim_user => true,
@@ -148,7 +149,6 @@ class TweetGatherer
     end
   end
 
-  private
   def local_time!(tweet)
     utc_time = DateTime.parse(tweet.created_at)
     local_time = utc_time.new_offset(NOW.offset)
