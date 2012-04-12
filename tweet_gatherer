@@ -39,6 +39,9 @@ def parse_options
     args.on("-f", "--[no-]dry-run", "Print email to STDOUT instead of sending it") do |arg|
       opts[:dry_run] = arg
     end
+    args.on("-v", "--[no-]verbose", "Print extra information") do |arg|
+      opts[:verbose] = arg
+    end
     args.on("-y", "--yml [FILENAME", "Yaml configuration file") do |arg|
       opts[:yml] = arg
     end
@@ -59,7 +62,10 @@ if __FILE__ == $0
   config = parse_config(opts[:yml])
 
   tg = TweetGatherer.new(config["twitter"], opts[:date], opts[:num_tweets])
-  exit if tg.tweets.empty? && tg.replies.empty? && tg.retweets.empty?
+  if tg.tweets.empty? && tg.replies.empty? && tg.retweets.empty?
+    puts "No tweets found." if opts[:dry_run] or opts[:verbose]
+    exit
+  end
 
   tweets = {
     :tweets   => tg.tweets,
@@ -75,9 +81,6 @@ if __FILE__ == $0
   subject = "Tweets from @#{screen_name} on #{tg.date}"
   emailer = Emailer.new(config["emails"], tweets, screen_name, subject)
 
-  if opts[:dry_run]
-    puts emailer.text
-  else
-    emailer.send
-  end
+  puts emailer.text if opts[:dry_run] or opts[:verbose]
+  emailer.send if not opts[:dry_run]
 end
