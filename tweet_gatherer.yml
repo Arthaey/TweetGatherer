@@ -1,6 +1,13 @@
+#
+# INSTRUCTIONS:
+#
+# Copy this file as tweet_gatherer.mine.yml and edit it with your own settings.
+#
+
 emails:
   to:   "Your Email <you@example.com>"
   from: "TweetGatherer <tweet_gatherer@arthaey.com>"
+  use_sendmail: false
 
 
 twitter:

@@ -15,6 +15,7 @@ class Emailer
 
   def initialize(config, tweets, screen_name, subject = "Today's Tweets")
     # set any missing config values to their defaults
+    config["use_sendmail"] = false if config["use_sendmail"].nil?
     config["from"] ||= FROM_DEFAULT
     section_titles = config["section_titles"] || {}
     section_titles["tweets"]   ||= SECTION_TITLE_DEFAULTS[:tweets]
@@ -25,6 +26,7 @@ class Emailer
       abort("Must define To: address via --to or the config file.")
     end
 
+    @use_sendmail = config["use_sendmail"]
     @from_email = config["from"]
     @to_email = config["to"]
     @subject = subject
@@ -53,8 +55,21 @@ class Emailer
   end
 
   def send
-    Net::SMTP.start("localhost") do |smtp|
-      smtp.send_message(text, @from_email, [@to_email])
+    # TODO: Dreamhost now requires SMTP authentication, which would require
+    # including the shell user's password(!). On the other hand, sendmail is
+    # still allowed.
+    if @use_sendmail
+      # write to a file so you don't have to worry about escaping all the
+      # characters that have special meaning to the shell, that could very well
+      # show up in the HTML message (eg, < and >)
+      temp_email_filename = ".#{@subject.gsub(/[^A-Za-z0-9_-]/, '')}"
+      File.open(temp_email_filename, "w") { |f| f.write(text) }
+      system("/usr/sbin/sendmail -t #{@to_email} < #{temp_email_filename}")
+      File.delete(temp_email_filename)
+    else
+      Net::SMTP.start("localhost") do |smtp|
+        smtp.send_message(text, @from_email, [@to_email])
+      end
     end
   end
 
