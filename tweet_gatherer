@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "rubygems"
+require "date"
 require "optparse"
 require "yaml"
 
@@ -29,6 +30,9 @@ def parse_options
   OptionParser.new do |args|
     args.on("-d", "--date DATE", "Date (defaults to today)") do |arg|
       opts[:date] = arg
+    end
+    args.on("--yesterday", "Gather tweets from yesterday") do
+      opts[:date] = "yesterday"
     end
     args.on("-n", "--num NUM", "Number of tweets to get per call") do |arg|
       opts[:num_tweets] = arg
@@ -61,7 +65,12 @@ if __FILE__ == $0
   opts = parse_options
   config = parse_config(opts[:yml])
 
-  tg = TweetGatherer.new(config["twitter"], opts[:date], opts[:num_tweets])
+  date = opts[:date]
+  if date == "yesterday"
+    date = (DateTime.now - 1).strftime("%Y-%m-%d")
+  end
+
+  tg = TweetGatherer.new(config["twitter"], date, opts[:num_tweets])
   if tg.tweets.empty? && tg.replies.empty? && tg.retweets.empty?
     puts "No tweets found." if opts[:dry_run] or opts[:verbose]
     exit

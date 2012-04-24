@@ -13,6 +13,7 @@ Tested in Ruby 1.8.
     
     Usage: tweet_gatherer [options]
         -d, --date DATE                  Date (defaults to today)
+            --yesterday                  Gather tweets from yesterday
         -n, --num NUM                    Number of tweets to get per call
         -t, --to EMAIL                   Email specified address; ignore config file
         -f, --[no-]dry-run               Print email to STDOUT instead of sending it
@@ -20,9 +21,11 @@ Tested in Ruby 1.8.
     
     Settings are read from tweet_gatherer.yml
 
-For example, email yourself today's tweets:
+For example, email yourself today's or yesterday's tweets:
 
     tweet_gatherer --to youremail@example.com
+
+    tweet_gatherer --to youremail@example.com --yesterday
 
 Or email yourself some other day's tweets:
 
