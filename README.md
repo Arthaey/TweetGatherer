@@ -101,6 +101,11 @@ The _from_ setting is also optional, and defaults to what you see below:
     emails:
       to: "Your Email <you@example.com>"
       from: "TweetGatherer <tweet_gatherer@arthaey.com>"
+      use_sendmail: false
+
+If you are running this script on a hosted server that requires you to use SMTP
+authentication, set _use_sendmail_ to _true_ and see if that works for you. (For
+example, this is necessary for Dreamhost servers.)
 
 ### Playing Nicely With Git
 
