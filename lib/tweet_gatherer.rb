@@ -118,13 +118,9 @@ class TweetGatherer
       next unless (hashtags & @ignore_hashtags).empty?
 
       # find replies
-      if tweet.text.start_with?("@")
-        # only keep if they have hashtags too -- otherwise they're just "private
-        # messages" and probably not interesting to a broader audience
-        next if tweet.entities["hashtags"].empty?
-
+      if tweet.in_reply_to_status_id
         # get entire conversation of replied-to tweet
-        convo = []
+        convo = [tweet]
         t = tweet.clone
         while (t.in_reply_to_status_id)
           t = Twitter.status(t.in_reply_to_status_id, :include_entities => true)
@@ -132,12 +128,10 @@ class TweetGatherer
           convo << t
         end
 
-        # add my tweet itself
-        convo << tweet
-
         # TODO:look for any reply to my tweet
         # Twitter.mentions(:since_id => tweet.id, :include_entities => true)
 
+        convo.reverse!
         convo.first.conversation_start = true
         convo.each { |c| c.conversation = true }
         @replies += convo
