@@ -10,6 +10,8 @@ require "json"
 gem "twitter", "=1.1.2"
 require "twitter"
 
+require "lib/tweet_comparator"
+
 class TweetGatherer
 
   NOW = DateTime.now
@@ -133,7 +135,11 @@ class TweetGatherer
 
         convo.reverse!
         convo.first.conversation_start = true
-        convo.each { |c| c.conversation = true }
+        convo.each do |convo_tweet|
+          convo_tweet.conversation = true
+          # TODO: remove hacky workaround for duplicated tweets in conversations
+          convo_tweet.extend(TweetComparator)
+        end
         @replies += convo
 
       # find retweets
@@ -145,6 +151,9 @@ class TweetGatherer
         @tweets << tweet
       end
     end
+
+    # TODO: remove hacky workaround for duplicated tweets in conversations
+    @replies.uniq!
   end
 
   def local_time!(tweet)
