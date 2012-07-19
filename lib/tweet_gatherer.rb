@@ -125,9 +125,13 @@ class TweetGatherer
         convo = [tweet]
         t = tweet.clone
         while (t.in_reply_to_status_id)
-          t = Twitter.status(t.in_reply_to_status_id, :include_entities => true)
-          local_time!(t)
-          convo << t
+          begin
+            t = Twitter.status(t.in_reply_to_status_id, :include_entities => true)
+            local_time!(t)
+            convo << t
+          rescue Twitter::NotFound
+            # if the tweet has since been deleted, there's not much we can do
+          end
         end
 
         # TODO:look for any reply to my tweet
