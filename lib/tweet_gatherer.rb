@@ -131,6 +131,7 @@ class TweetGatherer
             convo << t
           rescue Twitter::NotFound
             # if the tweet has since been deleted, there's not much we can do
+            t.in_reply_to_status_id = nil
           end
         end
 
